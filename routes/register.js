@@ -22,6 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Ruta que usa el controlador
-router.post('/register', upload.single('imagen'), registrarUsuario);
+router.post('/', upload.single('imagen'), registrarUsuario);
 
 module.exports = router;
