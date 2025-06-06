@@ -10,6 +10,9 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use('/api/register', registerRoutes);
 
+const loginRoutes = require('./routes/login');
+app.use('/api/login', loginRoutes);
+
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
