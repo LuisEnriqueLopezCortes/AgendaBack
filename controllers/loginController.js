@@ -22,10 +22,14 @@ const loginUsuario = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Contraseña incorrecta.' });
     }
 
-    // No devolvemos contraseña
-    delete usuario.contrasena;
+    // Solo devolvemos lo necesario
+    const datosUsuario = {
+      id: usuario.id,
+      gmail: usuario.gmail,
+      alias: usuario.alias
+    };
 
-    res.json({ success: true, message: 'Login exitoso', usuario });
+    res.json({ success: true, message: 'Login exitoso', usuario: datosUsuario });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Error en el servidor.' });
