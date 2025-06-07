@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-const notaController = require("../controllers/notaController");
+const notaController = require("../controllers/notasController");
 
 // Configuración de multer
 const storage = multer.diskStorage({
