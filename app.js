@@ -14,6 +14,8 @@ app.use(express.urlencoded({ extended: true })); // Para x-www-form-urlencoded
 app.use('/uploads', express.static('uploads'));
 app.use('/api/register', registerRoutes);
 app.use('/api/login', loginRoutes);
+const usuarioRoutes = require('./routes/usuarios');
+app.use('/api/usuarios', usuarioRoutes);
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
