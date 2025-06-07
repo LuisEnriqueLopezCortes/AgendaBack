@@ -4,7 +4,7 @@ const pool = require('../db'); // tu instancia de conexión con pg
 exports.agregarNota = async (req, res) => {
   try {
     const { id_usuario, titulo, descripcion, fecha_evento, estado } = req.body;
-    const imagen = req.file ? req.file.filename : null;
+    const imagen = req.file ? `uploads/${req.file.filename}` : null;
 
     const query = `
       INSERT INTO notas (id_usuario, titulo, descripcion, fecha_evento, estado, imagen)
