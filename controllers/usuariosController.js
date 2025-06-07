@@ -1,7 +1,7 @@
 const pool = require('../db');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const actualizarUsuario = async (req, res) => {
   const { id } = req.params;

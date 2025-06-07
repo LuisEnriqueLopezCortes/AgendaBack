@@ -9,6 +9,7 @@ const { actualizarPassword } = require('../controllers/usuariosController');
 // Ruta para actualizar usuario (ya existente)
 router.put('/:id', upload.single('imagen'), actualizarUsuario);
 
+// Password
 router.put('/actualizarPassword', actualizarPassword);
 
 // NUEVA ruta para obtener usuario por ID
