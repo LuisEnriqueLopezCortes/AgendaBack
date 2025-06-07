@@ -1,21 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-const notaController = require("../controllers/notasController");
+const pool = require('../db');
 
-// Configuración de multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // imagen.jpg -> 162387192.jpg
-  },
-});
-const upload = multer({ storage: storage });
+exports.agregarNota = async (req, res) => {
+  try {
+    const { id_usuario, titulo, descripcion, fecha_evento, estado } = req.body;
+    const imagen = req.file ? `uploads/${req.file.filename}` : null;
 
-// ESTA LÍNEA ES LA CLAVE:
-router.post("/api/notas", upload.single("imagen"), notaController.agregarNota);
+    const query = `
+      INSERT INTO notas (id_usuario, titulo, descripcion, fecha_evento, estado, imagen)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [id_usuario, titulo, descripcion, fecha_evento, estado, imagen];
 
-module.exports = router;
+    const result = await pool.query(query, values);
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error al agregar nota:', error);
+    res.status(500).json({ message: 'Error al guardar la nota' });
+  }
+};
