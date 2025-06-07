@@ -45,3 +45,20 @@ exports.eliminarNota = async (req, res) => {
     res.status(500).json({ message: 'Error al eliminar nota' });
   }
 };
+
+exports.editarNota = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { titulo, descripcion, fecha_evento } = req.body;
+
+    await pool.query(
+      'UPDATE notas SET titulo = $1, descripcion = $2, fecha_evento = $3 WHERE id_nota = $4',
+      [titulo, descripcion, fecha_evento, id]
+    );
+
+    res.json({ message: 'Nota actualizada' });
+  } catch (error) {
+    console.error('Error al editar nota:', error);
+    res.status(500).json({ message: 'Error al editar nota' });
+  }
+};
