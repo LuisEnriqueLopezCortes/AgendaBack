@@ -1,6 +1,7 @@
 const pool = require('../db');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const actualizarUsuario = async (req, res) => {
   const { id } = req.params;
@@ -39,4 +40,36 @@ const actualizarUsuario = async (req, res) => {
   }
 };
 
-module.exports = { actualizarUsuario };
+// ACTUALIZAR CONTRASEÑA DEL USUARIO
+const actualizarPassword = async (req, res) => {
+  const { correo, passwordActual, nuevoPassword } = req.body;
+
+  try {
+    const result = await pool.query('SELECT * FROM usuarios WHERE correo = $1', [correo]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    }
+
+    const usuario = result.rows[0];
+    const passwordValida = await bcrypt.compare(passwordActual, usuario.password);
+
+    if (!passwordValida) {
+      return res.status(401).json({ success: false, message: 'Contraseña actual incorrecta' });
+    }
+
+    const nuevoPasswordHash = await bcrypt.hash(nuevoPassword, 10);
+
+    await pool.query('UPDATE usuarios SET password = $1 WHERE correo = $2', [nuevoPasswordHash, correo]);
+
+    res.json({ success: true, message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar contraseña:', error);
+    res.status(500).json({ success: false, message: 'Error en el servidor' });
+  }
+};
+
+module.exports = {
+  actualizarUsuario,
+  actualizarPassword, // <--- Importante agregar esta línea
+};

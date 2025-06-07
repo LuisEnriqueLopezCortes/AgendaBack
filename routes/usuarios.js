@@ -4,9 +4,12 @@ const upload = require('../middleware/multer');
 const db = require('../db'); // Asegúrate de tener la conexión a MySQL aquí
 
 const { actualizarUsuario } = require('../controllers/usuariosController');
+const { actualizarPassword } = require('../controllers/usuariosController');
 
 // Ruta para actualizar usuario (ya existente)
 router.put('/:id', upload.single('imagen'), actualizarUsuario);
+
+router.put('/actualizarPassword', actualizarPassword);
 
 // NUEVA ruta para obtener usuario por ID
 router.get('/id/:id', async (req, res) => {
