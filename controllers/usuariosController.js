@@ -4,7 +4,7 @@ const path = require('path');
 
 const actualizarUsuario = async (req, res) => {
   const { id } = req.params;
-  const { nombre, apellido, alias, telefono } = req.body;
+  const { nombre_usuario, apellido, alias, telefono } = req.body;
   const imagen = req.file ? req.file.path : null;
 
   try {
@@ -22,7 +22,7 @@ const actualizarUsuario = async (req, res) => {
 
     const query = `
       UPDATE usuarios
-      SET nombre = $1,
+      SET nombre_usuario = $1,
           apellido = $2,
           alias = $3,
           telefono = $4,
@@ -30,7 +30,7 @@ const actualizarUsuario = async (req, res) => {
       WHERE id = $6
     `;
 
-    await pool.query(query, [nombre, apellido, alias, telefono, imagen, id]);
+    await pool.query(query, [nombre_usuario, apellido, alias, telefono, imagen, id]);
 
     res.json({ success: true, message: 'Usuario actualizado correctamente' });
   } catch (error) {
