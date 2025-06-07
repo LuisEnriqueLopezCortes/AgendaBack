@@ -45,7 +45,7 @@ const actualizarPassword = async (req, res) => {
   const { correo, passwordActual, nuevoPassword } = req.body;
 
   try {
-    const result = await pool.query('SELECT * FROM usuarios WHERE correo = $1', [correo]);
+    const result = await pool.query('SELECT * FROM usuarios WHERE gmail = $1', [correo]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -60,7 +60,7 @@ const actualizarPassword = async (req, res) => {
 
     const nuevoPasswordHash = await bcrypt.hash(nuevoPassword, 10);
 
-    await pool.query('UPDATE usuarios SET password = $1 WHERE correo = $2', [nuevoPasswordHash, correo]);
+    await pool.query('UPDATE usuarios SET password = $1 WHERE gmail = $2', [nuevoPasswordHash, correo]);
 
     res.json({ success: true, message: 'Contraseña actualizada correctamente' });
   } catch (error) {
