@@ -9,22 +9,23 @@ const { actualizarUsuario } = require('../controllers/usuariosController');
 router.put('/:id', upload.single('imagen'), actualizarUsuario);
 
 // NUEVA ruta para obtener usuario por ID
-router.get('/id/:id', (req, res) => {
+router.get('/id/:id', async (req, res) => {
   const id = parseInt(req.params.id);
+  console.log('Buscando ID:', id);
 
-  const sql = 'SELECT * FROM usuarios WHERE id = $1';
-  db.query(sql, [id], (err, results) => {
-    if (err) {
-      console.error('Error al obtener usuario por ID:', err);
-      return res.status(500).json({ success: false, message: 'Error en el servidor' });
-    }
+  try {
+    const result = await db.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+    console.log('🔍 Resultado SQL:', result.rows);
 
-    if (results.length > 0) {
-      res.json({ success: true, usuario: results[0] });
+    if (result.rows.length > 0) {
+      res.json({ success: true, usuario: result.rows[0] });
     } else {
       res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
-  });
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).json({ success: false, message: 'Error en el servidor' });
+  }
 });
 
 module.exports = router;
