@@ -11,7 +11,7 @@ const subirNota = async (req, res) => {
     fecha_evento,
     tipo,
     prioridad,
-    recordatorio,
+    recordatorio = null,
     estado
   } = req.body;
 
@@ -25,12 +25,12 @@ const subirNota = async (req, res) => {
   try {
     // Insertar nota
     const insertNotaResult = await pool.query(
-      `INSERT INTO notas_agenda 
-        (id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad, recordatorio)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING id`,
-      [id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad, recordatorio]
-    );
+  `INSERT INTO notas_agenda 
+    (id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad)
+   VALUES ($1, $2, $3, $4, $5, $6, $7)
+   RETURNING id`,
+  [id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad]
+);
 
     const notaId = insertNotaResult.rows[0].id;
 
