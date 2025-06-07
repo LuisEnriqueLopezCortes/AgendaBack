@@ -4,5 +4,6 @@ const notaController = require('../controllers/notasController');
 const upload = require('../middleware/upload');
 
 router.post('/agregarNota', upload.single('imagen'), notaController.agregarNota);
+router.get('/usuario/:id', notaController.obtenerNotasPorUsuario);
 
 module.exports = router;

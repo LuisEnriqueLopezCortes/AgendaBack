@@ -20,3 +20,17 @@ exports.agregarNota = async (req, res) => {
     res.status(500).json({ message: 'Error al guardar la nota' });
   }
 };
+
+exports.obtenerNotasPorUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'SELECT * FROM notas WHERE id_usuario = $1 ORDER BY fecha_evento DESC',
+      [id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error al obtener notas:', error);
+    res.status(500).json({ message: 'Error al obtener notas' });
+  }
+};
