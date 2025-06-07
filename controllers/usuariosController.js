@@ -42,17 +42,17 @@ const actualizarUsuario = async (req, res) => {
 
 // ACTUALIZAR CONTRASEÑA DEL USUARIO
 const actualizarPassword = async (req, res) => {
-  const { correo, passwordActual, nuevoPassword } = req.body;
+  const { gmail, passwordActual, nuevoPassword } = req.body;
 
   try {
-    const result = await pool.query('SELECT * FROM usuarios WHERE gmail = $1', [correo]);
+    const result = await pool.query('SELECT * FROM usuarios WHERE gmail = $1', [gmail]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
     const usuario = result.rows[0];
-    const passwordValida = await bcrypt.compare(passwordActual, usuario.password);
+    const passwordValida = await bcrypt.compare(passwordActual, usuario.contrasena);
 
     if (!passwordValida) {
       return res.status(401).json({ success: false, message: 'Contraseña actual incorrecta' });
@@ -60,7 +60,7 @@ const actualizarPassword = async (req, res) => {
 
     const nuevoPasswordHash = await bcrypt.hash(nuevoPassword, 10);
 
-    await pool.query('UPDATE usuarios SET password = $1 WHERE gmail = $2', [nuevoPasswordHash, correo]);
+    await pool.query('UPDATE usuarios SET contrasena = $1 WHERE gmail = $2', [nuevoPasswordHash, gmail]);
 
     res.json({ success: true, message: 'Contraseña actualizada correctamente' });
   } catch (error) {
