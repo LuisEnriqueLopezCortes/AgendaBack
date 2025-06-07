@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/multer');
-const { actualizarUsuario } = require('../controllers/usuarioController');
+const { actualizarUsuario } = require('../controllers/usuariosController');
 
 router.put('/:id', upload.single('imagen'), actualizarUsuario);
 
