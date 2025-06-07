@@ -5,7 +5,7 @@ require('dotenv').config();
 const registerRoutes = require('./routes/register');
 const loginRoutes = require('./routes/login');
 const usuarioRoutes = require('./routes/usuarios');
-const notasRoutes = require('./routes/notasRoutes'); // <<--- NUEVO
+const notasRoutes = require('./routes/notas'); // <<--- NUEVO
 
 const app = express();
 
