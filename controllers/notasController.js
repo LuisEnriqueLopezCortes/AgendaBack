@@ -29,16 +29,7 @@ const subirNota = async (req, res) => {
         (id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad, recordatorio)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
        RETURNING id`,
-      [
-        id_usuario,
-        titulo,
-        descripcion || '',
-        fecha_evento,
-        estado || 'pendiente',
-        tipo,
-        prioridad || null,
-        recordatorio || false
-      ]
+      [id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad, recordatorio]
     );
 
     const notaId = insertNotaResult.rows[0].id;
