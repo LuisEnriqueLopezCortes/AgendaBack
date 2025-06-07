@@ -12,7 +12,7 @@ router.put('/:id', upload.single('imagen'), actualizarUsuario);
 router.get('/id/:id', (req, res) => {
   const id = parseInt(req.params.id);
 
-  const sql = 'SELECT * FROM usuarios WHERE id = ?';
+  const sql = 'SELECT * FROM usuarios WHERE id = $1';
   db.query(sql, [id], (err, results) => {
     if (err) {
       console.error('Error al obtener usuario por ID:', err);
