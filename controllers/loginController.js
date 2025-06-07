@@ -16,6 +16,11 @@ const loginUsuario = async (req, res) => {
     }
 
     const usuario = result.rows[0];
+
+    if (!usuario.contrasena) {
+      return res.status(500).json({ success: false, message: 'Error interno: contraseña no encontrada.' });
+    }
+
     const passwordMatch = await bcrypt.compare(contrasena, usuario.contrasena);
 
     if (!passwordMatch) {
