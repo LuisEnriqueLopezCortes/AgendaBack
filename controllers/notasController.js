@@ -1,65 +1,23 @@
-const pool = require('../db');
-const path = require('path');
-const fs = require('fs');
+// controllers/nota.controller.js
+const pool = require('../db'); // tu instancia de conexión con pg
 
-
-const subirNota = async (req, res) => {
-  const {
-    id_usuario,
-    titulo,
-    descripcion,
-    fecha_evento,
-    tipo,
-    prioridad,
-    recordatorio = null,
-    estado
-  } = req.body;
-
-  if (!id_usuario || !titulo || !fecha_evento || !tipo) {
-    return res.status(400).json({
-      success: false,
-      message: 'Faltan campos obligatorios (id_usuario, titulo, fecha_evento, tipo).'
-    });
-  }
-
+exports.agregarNota = async (req, res) => {
   try {
-    // Insertar nota
-    const insertNotaResult = await pool.query(
-  `INSERT INTO notas_agenda 
-    (id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad)
-   VALUES ($1, $2, $3, $4, $5, $6, $7)
-   RETURNING id`,
-  [id_usuario, titulo, descripcion, fecha_evento, estado, tipo, prioridad]
-);
+    const { id_usuario, titulo, descripcion, fecha_evento, estado } = req.body;
+    const imagen = req.file ? req.file.filename : null;
 
-    const notaId = insertNotaResult.rows[0].id;
+    const query = `
+      INSERT INTO notas (id_usuario, titulo, descripcion, fecha_evento, estado, imagen)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [id_usuario, titulo, descripcion, fecha_evento, estado, imagen];
 
-    // Guardar archivos asociados, si hay
-    if (req.files && req.files.length > 0) {
-      for (const archivo of req.files) {
-        const url = archivo.path.replace(/\\/g, '/');
-        const tipo = archivo.mimetype;
+    const result = await pool.query(query, values);
 
-        await pool.query(
-          `INSERT INTO archivos_nota (id_nota, url_archivo, tipo_archivo)
-           VALUES ($1, $2, $3)`,
-          [notaId, url, tipo]
-        );
-      }
-    }
-
-    res.status(201).json({
-      success: true,
-      message: 'Nota guardada correctamente.',
-      nota_id: notaId
-    });
-
+    res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error("Error al guardar nota:", error.message);
-    console.log("Body:", req.body);
-    console.log("Archivos:", req.files); // Este log es clave
-    res.status(500).json({ success: false, message: "Error en el servidor al guardar la nota." });
+    console.error('Error al agregar nota:', error);
+    res.status(500).json({ message: 'Error al guardar la nota' });
   }
 };
-
-module.exports = { subirNota };
