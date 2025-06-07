@@ -64,11 +64,8 @@ const subirNota = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error al guardar nota:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error en el servidor al guardar la nota.'
-    });
+    console.error(" Error al guardar nota:", error); // Este log es clave
+    res.status(500).json({ success: false, message: "Error en el servidor al guardar la nota." });
   }
 };
 
