@@ -34,3 +34,14 @@ exports.obtenerNotasPorUsuario = async (req, res) => {
     res.status(500).json({ message: 'Error al obtener notas' });
   }
 };
+
+exports.eliminarNota = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await pool.query('DELETE FROM notas WHERE id = $1', [id]);
+    res.sendStatus(204); // No Content
+  } catch (error) {
+    console.error('Error al eliminar nota:', error);
+    res.status(500).json({ message: 'Error al eliminar nota' });
+  }
+};
